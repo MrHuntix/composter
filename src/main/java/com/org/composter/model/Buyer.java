@@ -11,7 +11,12 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "buyer")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Buyer.findByContact", query = Buyer.findByContact, resultClass = Buyer.class)
+})
 public class Buyer {
+//    public static final String findByContact = "FROM Buyer b where b.contact = :userContact";
+    public static final String findByContact = "SELECT * FROM buyer WHERE Contact=:userContact";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
