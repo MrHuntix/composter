@@ -7,9 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -42,5 +40,10 @@ public class UserController {
         LOG.info("start of processing of seller registration");
         boolean response = userService.addSeller(request);
         return response?ResponseEntity.ok("successfull"):ResponseEntity.ok("exists");
+    }
+
+    @GetMapping("/seller/{id}")
+    ResponseEntity<String> getById(@PathVariable("id") String id) {
+        return ResponseEntity.ok(userService.findSellerById(id));
     }
 }

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Objects;
 
 @Service
@@ -31,6 +32,7 @@ public class UserService {
      * @param request login information of user.
      * @return true if credentials match false otherwise.
      */
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public boolean login(LoginRequest request) {
         LOG.info("log in request for {}", request.getContact());
         if(BUYER.equals(request.getChoice())) {
@@ -66,6 +68,7 @@ public class UserService {
      * @param registerRequest registration information of buyer
      * @return true if buyer is inserted to db false if buyer already exists
      */
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public boolean addBuyer(RegisterRequest registerRequest) {
         Buyer existingbuyer = buyerDao.findByContact(registerRequest.getContact()).orElse(null);
         if(Objects.nonNull(existingbuyer)) {
@@ -83,6 +86,7 @@ public class UserService {
      * @param registerRequest registration information of seller
      * @return true if seller is inserted to db false if seller already exists
      */
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public boolean addSeller(RegisterRequest registerRequest) {
         Seller existingseller = sellerDao.findByContact(registerRequest.getContact()).orElse(null);
         if(Objects.nonNull(existingseller)) {
@@ -93,5 +97,10 @@ public class UserService {
         Seller seller = MapperUtil.getSeller(registerRequest);
         sellerDao.saveAndFlush(seller);
         return true;
+    }
+
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public String findSellerById(String id) {
+        return sellerDao.findByContact(id).get().getName();
     }
 }

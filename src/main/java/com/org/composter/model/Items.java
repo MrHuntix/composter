@@ -12,14 +12,24 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "items")
+@SqlResultSetMapping(name="updateResult", columns = { @ColumnResult(name = "count")})
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Items.getItemsBySellerId", query = Items.getItemsBySellerId, resultClass = Items.class),
+        @NamedNativeQuery(name = "Items.deleteZeroValueItems", query = Items.deleteZeroValueItems, resultSetMapping = "updateResult")
+        @NamedNativeQuery(name = "Items.updateWeight", query = Items.updateWeight, resultSetMapping = "updateResult")
+})
 public class Items {
+    public static final String getItemsBySellerId = "SELECT * FROM items WHERE SelleId= :sellerId";
+    public static final String deleteZeroValueItems = "DELETE FROM items WHERE ItemWeight=0";
+    public static final String updateWeight = "UPDATE items SET ItemWeight= :weight WHERE ItemId= :id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ItemId")
     private long itemId;
 
     @Column(name = "SelleId")
-    private int sellerId;
+    private long sellerId;
 
     @Column(name = "ItemName")
     private String itemName;
