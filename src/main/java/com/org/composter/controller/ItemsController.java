@@ -3,6 +3,7 @@ package com.org.composter.controller;
 import com.org.composter.model.Items;
 import com.org.composter.request.NewItemRequest;
 import com.org.composter.response.ItemResponse;
+import com.org.composter.response.SimpleResponse;
 import com.org.composter.service.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,27 +35,27 @@ public class ItemsController {
     }
 
     @PostMapping(value = "/item/add")
-    ResponseEntity<String> reqAddNewItem(@RequestBody NewItemRequest item) {
+    ResponseEntity<SimpleResponse> reqAddNewItem(@RequestBody NewItemRequest item) {
         LOG.info("start of request to add item");
         boolean response = itemService.add(item);
-        return response?ResponseEntity.ok("success"):ResponseEntity.ok("unsuccess");
+        return response?ResponseEntity.ok(new SimpleResponse("success")):ResponseEntity.ok(new SimpleResponse("unsuccess"));
     }
 
     @PutMapping(value = "/item/{id}/weight/{weight}")
-    ResponseEntity<String> reqUpdateItem(@PathVariable("id") String id, @PathVariable("weight") String weight) {
+    ResponseEntity<SimpleResponse> reqUpdateItem(@PathVariable("id") String id, @PathVariable("weight") String weight) {
         itemService.updateItem(Long.parseLong(id), weight);
-        return ResponseEntity.ok("updated");
+        return ResponseEntity.ok(new SimpleResponse("updated"));
     }
 
     @DeleteMapping(value = "/item/{id}")
-    public ResponseEntity<String> reqDeleteItemById(@PathVariable("id") String id) {
+    public ResponseEntity<SimpleResponse> reqDeleteItemById(@PathVariable("id") String id) {
         LOG.info("deleting item {}", id);
-        return ResponseEntity.ok(itemService.deleteItem(id));
+        return ResponseEntity.ok(new SimpleResponse(itemService.deleteItem(id)));
     }
 
     @DeleteMapping(value = "/item/zero")
-    public ResponseEntity<String> reqDeleteZeroItem() {
+    public ResponseEntity<SimpleResponse> reqDeleteZeroItem() {
         itemService.deleteZero();
-        return ResponseEntity.ok("deleted");
+        return ResponseEntity.ok(new SimpleResponse("deleted"));
     }
 }

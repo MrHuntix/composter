@@ -2,6 +2,7 @@ package com.org.composter.controller;
 
 import com.org.composter.request.LoginRequest;
 import com.org.composter.request.RegisterRequest;
+import com.org.composter.response.SimpleResponse;
 import com.org.composter.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,28 +23,28 @@ public class UserController {
      * @return user choice on success or nouser on failure.
      */
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    ResponseEntity<SimpleResponse> login(@RequestBody LoginRequest request) {
         LOG.info("start of processing of login request");
         boolean response = userService.login(request);
-        return response?ResponseEntity.ok(request.getChoice()):ResponseEntity.ok("nouser");
+        return response?ResponseEntity.ok(new SimpleResponse(request.getChoice())):ResponseEntity.ok(new SimpleResponse("nouser"));
     }
 
     @PostMapping(value = "/buyer", consumes = "application/json", produces = "application/json")
-    ResponseEntity<String> buyer(@RequestBody RegisterRequest request) {
+    ResponseEntity<SimpleResponse> buyer(@RequestBody RegisterRequest request) {
         LOG.info("start of processing of buyer registration");
         boolean response = userService.addBuyer(request);
-        return response?ResponseEntity.ok("successfull"):ResponseEntity.ok("exists");
+        return response?ResponseEntity.ok(new SimpleResponse("successfull")):ResponseEntity.ok(new SimpleResponse("exists"));
     }
 
     @PostMapping(value = "/seller", consumes = "application/json", produces = "application/json")
-    ResponseEntity<String> seller(@RequestBody RegisterRequest request) {
+    ResponseEntity<SimpleResponse> seller(@RequestBody RegisterRequest request) {
         LOG.info("start of processing of seller registration");
         boolean response = userService.addSeller(request);
-        return response?ResponseEntity.ok("successfull"):ResponseEntity.ok("exists");
+        return response?ResponseEntity.ok(new SimpleResponse("successfull")):ResponseEntity.ok(new SimpleResponse("exists"));
     }
 
     @GetMapping("/seller/{id}")
-    ResponseEntity<String> getById(@PathVariable("id") String id) {
-        return ResponseEntity.ok(userService.findSellerById(id));
+    ResponseEntity<SimpleResponse> getById(@PathVariable("id") String id) {
+        return ResponseEntity.ok(new SimpleResponse(userService.findSellerById(id)));
     }
 }

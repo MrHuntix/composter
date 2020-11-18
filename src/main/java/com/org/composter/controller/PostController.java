@@ -3,6 +3,7 @@ package com.org.composter.controller;
 import com.org.composter.dao.PostDao;
 import com.org.composter.model.Post;
 import com.org.composter.request.PostRequest;
+import com.org.composter.response.SimpleResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,12 @@ public class PostController {
     }
 
     @PutMapping(value = "/posts", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<String> addPost(@RequestBody PostRequest request) {
+    public ResponseEntity<SimpleResponse> addPost(@RequestBody PostRequest request) {
         LOG.info("start of post add process");
         Post p = new Post();
         p.setNews(request.getPost());
         p.setPostedon(request.getDate());
         postDao.saveAndFlush(p);
-        return ResponseEntity.ok("succes");
+        return ResponseEntity.ok(new SimpleResponse("success"));
     }
 }

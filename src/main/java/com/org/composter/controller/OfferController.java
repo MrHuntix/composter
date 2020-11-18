@@ -2,6 +2,7 @@ package com.org.composter.controller;
 
 import com.org.composter.request.OfferRequest;
 import com.org.composter.response.CartReponse;
+import com.org.composter.response.SimpleResponse;
 import com.org.composter.response.ViewOffersResponse;
 import com.org.composter.service.OfferService;
 import org.slf4j.Logger;
@@ -27,10 +28,10 @@ public class OfferController {
     }
 
     @PostMapping(value = "/offers", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<String> placeOffer(@RequestBody OfferRequest offerRequest) {
+    public ResponseEntity<SimpleResponse> placeOffer(@RequestBody OfferRequest offerRequest) {
         LOG.info("start of create offer request");
         boolean resposne = offerService.placeOffer(offerRequest);
-        return resposne?ResponseEntity.ok("exists"):ResponseEntity.ok("offered");
+        return resposne?ResponseEntity.ok(new SimpleResponse("exists")):ResponseEntity.ok(new SimpleResponse("offered"));
     }
 
     @GetMapping(value = "/cart/{id}", produces = "application/json")
