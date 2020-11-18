@@ -53,7 +53,7 @@ public class ItemService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<Items> getItems(String user) {
+    public List<Items> getItemsForUser(String user) {
         LOG.info("fetching items for {}", user);
         long sellerId = sellerDao.findByContact(user).get().getSellerId();
         LOG.info("found {} for  seller {}. Fetching items", sellerId, user);
@@ -68,7 +68,7 @@ public class ItemService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<ItemResponse> getItems() {
+    public List<ItemResponse> getAllItems() {
         LOG.info("start of fetch items process");
         List<Items> items = itemsDao.findAll();
         if(CollectionUtils.isEmpty(items)) {

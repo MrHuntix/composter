@@ -1,12 +1,10 @@
 package com.org.composter.util;
 
 import com.org.composter.dao.SellerDao;
-import com.org.composter.model.Buyer;
-import com.org.composter.model.Items;
-import com.org.composter.model.Logs;
-import com.org.composter.model.Seller;
+import com.org.composter.model.*;
 import com.org.composter.request.LoginRequest;
 import com.org.composter.request.NewItemRequest;
+import com.org.composter.request.OfferRequest;
 import com.org.composter.request.RegisterRequest;
 import com.org.composter.response.ItemResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +60,15 @@ public class MapperUtil {
             return response;
         }).collect(Collectors.toList());
         return responses;
+    }
+
+    public static Offers getOffer(OfferRequest request, long buyerId, long sellerId) {
+        Offers offers = new Offers();
+        offers.setItemId(Long.parseLong(request.getItemId()));
+        offers.setSellerId(sellerId);
+        offers.setBuyerId(buyerId);
+        offers.setWeight(request.getWeight());
+        offers.setCost(request.getCost());
+        return offers;
     }
 }

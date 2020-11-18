@@ -15,7 +15,7 @@ import java.util.Date;
 @SqlResultSetMapping(name="updateResult", columns = { @ColumnResult(name = "count")})
 @NamedNativeQueries({
         @NamedNativeQuery(name = "Items.getItemsBySellerId", query = Items.getItemsBySellerId, resultClass = Items.class),
-        @NamedNativeQuery(name = "Items.deleteZeroValueItems", query = Items.deleteZeroValueItems, resultSetMapping = "updateResult")
+        @NamedNativeQuery(name = "Items.deleteZeroValueItems", query = Items.deleteZeroValueItems, resultSetMapping = "updateResult"),
         @NamedNativeQuery(name = "Items.updateWeight", query = Items.updateWeight, resultSetMapping = "updateResult")
 })
 public class Items {

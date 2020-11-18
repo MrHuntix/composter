@@ -21,13 +21,13 @@ public class PostController {
     @Autowired
     private PostDao postDao;
 
-    @GetMapping(value = "/posts", produces = "application.json")
+    @GetMapping(value = "/posts", produces = "application/json")
     public ResponseEntity<List<Post>> getPosts() {
         LOG.info("start of post fetch process");
         return ResponseEntity.ok(postDao.findAll());
     }
 
-    @PutMapping(value = "/posts", produces = "application.json", consumes = "application.json")
+    @PutMapping(value = "/posts", produces = "application/json", consumes = "application/json")
     public ResponseEntity<String> addPost(@RequestBody PostRequest request) {
         LOG.info("start of post add process");
         Post p = new Post();
