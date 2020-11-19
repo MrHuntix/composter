@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ItemsController {
@@ -21,9 +23,9 @@ public class ItemsController {
     private ItemService itemService;
 
     @GetMapping(value = "/item/seller/{sellerContact}", produces = "application/json")
-    ResponseEntity<List<Items>> reqItemForUser(@PathVariable("sellerContact") String sellerContact) {
+    ResponseEntity<List<HashMap<String, String>>> reqItemForUser(@PathVariable("sellerContact") String sellerContact) {
         LOG.info("fetching items for {}", sellerContact);
-        List<Items> response = itemService.getItemsForUser(sellerContact);
+        List<HashMap<String, String>> response = itemService.getItemsForUser(sellerContact);
         return ResponseEntity.ok(response);
     }
 
@@ -31,6 +33,13 @@ public class ItemsController {
     ResponseEntity<List<ItemResponse>> reqAllItems() {
         LOG.info("start of fetching items");
         List<ItemResponse> response = itemService.getAllItems();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/item/disp" , produces = "application/json")
+    ResponseEntity<List<Map<String, String>>> dispItems() {
+        LOG.info("start of fetching items");
+        List<Map<String, String>> response = itemService.dispItems();
         return ResponseEntity.ok(response);
     }
 

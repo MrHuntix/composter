@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class OfferController {
@@ -21,9 +23,9 @@ public class OfferController {
     private OfferService offerService;
 
     @GetMapping(value = "/offers/{seller}", produces = "application/json")
-    public ResponseEntity<List<ViewOffersResponse>> getOffers(@PathVariable("seller") String seller) {
+    public ResponseEntity<List<HashMap<String, String>>> getOffers(@PathVariable("seller") String seller) {
         LOG.info("getting offers for {}", seller);
-        List<ViewOffersResponse> offers = offerService.getOffersForSeller(seller);
+        List<HashMap<String, String>> offers = offerService.getOffersForSeller(seller);
         return ResponseEntity.ok(offers);
     }
 
@@ -35,8 +37,8 @@ public class OfferController {
     }
 
     @GetMapping(value = "/cart/{id}", produces = "application/json")
-    public ResponseEntity<List<CartReponse>> getCart(@PathVariable("id")String id) {
-        List<CartReponse> response = offerService.getCart(id);
+    public ResponseEntity<List<Map<String, String>>> getCart(@PathVariable("id")String id) {
+        List<Map<String, String>> response = offerService.getCart(id);
         return ResponseEntity.ok(response);
     }
 }

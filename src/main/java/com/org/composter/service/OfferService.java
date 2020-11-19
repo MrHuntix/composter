@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OfferService {
@@ -32,13 +35,25 @@ public class OfferService {
     private BuyerDao buyerDao;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<ViewOffersResponse> getOffersForSeller(String seller) {
+    public List<HashMap<String, String>> getOffersForSeller(String seller) {
         LOG.info("getting offers for seller {}", seller);
         Seller s = sellerDao.findByContact(seller).get();
         LOG.info("fetching offers for seller {} for {}", s.getSellerId(), seller);
         List<ViewOffersResponse> offers = offersDao.getOffersForSeller(String.valueOf(s.getSellerId()));
-        LOG.info("found {} offers", offers.size());
-        return offers;
+        List<HashMap<String, String>> mappedOffers = offers.stream().map(offer -> {
+            HashMap<String, String> items = new HashMap<>();
+            items.put("OfferId", String.valueOf(offer.getOfferId()));
+            items.put("ItemName", offer.getItemName());
+            items.put("ItemWeight", offer.getItemWeight());
+            items.put("Cost", String.valueOf(offer.getItemCost()));
+            items.put("BuyerName", offer.getBuyerName());
+            items.put("BuyerContact", offer.getBuyerContact());
+            items.put("weight", offer.getWeight());
+            items.put("cost", offer.getOfferCost());
+            return items;
+        }).collect(Collectors.toList());
+        LOG.info("found and mapped {} offers for {}", mappedOffers.size(), seller);
+        return mappedOffers;
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
@@ -64,12 +79,19 @@ public class OfferService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<CartReponse> getCart(String id) {
+    public List<Map<String, String>> getCart(String id) {
         LOG.info("getting cart for {}", id);
         Buyer buyer = buyerDao.findByContact(id).get();
         LOG.info("got {} for {}", buyer.getId(), id);
         List<CartReponse> cart = offersDao.getCart(String.valueOf(buyer.getId()));
+        List<Map<String, String>> mappedCart = cart.stream().map(c -> {
+            HashMap<String, String> item = new HashMap<>();
+            item.put("compostNameCart", c.getItemName());
+            item.put("compostCostCart", c.getCost());
+            item.put("compostWeightCart", c.getWeight());
+            return item;
+        }).collect(Collectors.toList());
         LOG.info("found {} in cart", cart.size());
-        return cart;
+        return mappedCart;
     }
 }

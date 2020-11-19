@@ -6,7 +6,9 @@ import com.org.composter.dao.SellerDao;
 import com.org.composter.model.Items;
 import com.org.composter.model.Logs;
 import com.org.composter.request.NewItemRequest;
+import com.org.composter.response.AllItemsResponse;
 import com.org.composter.response.ItemResponse;
+import com.org.composter.response.ViewOffersResponse;
 import com.org.composter.util.MapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,10 @@ import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -53,13 +58,21 @@ public class ItemService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<Items> getItemsForUser(String user) {
+    public List<HashMap<String, String>> getItemsForUser(String user) {
         LOG.info("fetching items for {}", user);
         long sellerId = sellerDao.findByContact(user).get().getSellerId();
         LOG.info("found {} for  seller {}. Fetching items", sellerId, user);
         List<Items> items = itemsDao.getItemsBySellerId(String.valueOf(sellerId));
-        LOG.info("found {} items for {}", items.size(), sellerId);
-        return items;
+        List<HashMap<String, String>> itemsmapped = items.stream().map(item -> {
+            HashMap<String, String> i = new HashMap<>();
+            i.put("ItemId", String.valueOf(item.getItemId()));
+            i.put("Cost", String.valueOf(item.getCost()));
+            i.put("ItemName", item.getItemName());
+            i.put("ItemWeight", item.getItemWeight());
+            return i;
+        }).collect(Collectors.toList());
+        LOG.info("found {} items for {}", itemsmapped.size(), sellerId);
+        return itemsmapped;
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
@@ -84,8 +97,25 @@ public class ItemService {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void updateItem(long id, String weight) {
         LOG.info("updating item {}", id);
-
         itemsDao.updateWeight(id, weight);
+    }
+
+    public List<Map<String, String>> dispItems() {
+        List<AllItemsResponse> items = itemsDao.getItemsForSeller();
+        LOG.info("found {}", items.size());
+        List<Map<String, String>> mappedItems = items.stream().map(item -> {
+            Map<String, String> i = new HashMap<>();
+            i.put("ItemId", String.valueOf(item.getItemId()));
+            i.put("Name", item.getSname());
+            i.put("Contact", item.getScontact());
+            i.put("ItemName", item.getIname());
+            i.put("Cost", item.getIcost());
+            i.put("DayPosted", item.getDp().toString());
+            i.put("ItemWeight", item.getIweight());
+            i.put("Image", item.getIimg().toString());
+            return i;
+        }).collect(Collectors.toList());
+        return mappedItems;
     }
 
 
