@@ -47,7 +47,7 @@ public class UserService {
                 return true;
             }
 
-        } else {
+        } else if(SELLER.equals(request.getChoice())){
             LOG.info("login request from {}", SELLER);
             Seller seller = sellerDao.findByContact(request.getContact()).orElse(null);
             if(Objects.isNull(seller)) {
@@ -58,6 +58,9 @@ public class UserService {
                 LOG.info("login credentials valid for {}", request.getContact());
                 return true;
             }
+        } else {
+            LOG.info("invalid choice");
+            return false;
         }
         LOG.info("invalid request user source. Got {}", request.getChoice());
         return false;

@@ -43,7 +43,7 @@ public class UserController {
         return response?ResponseEntity.ok(new SimpleResponse("successfull")):ResponseEntity.ok(new SimpleResponse("exists"));
     }
 
-    @GetMapping("/seller/{id}")
+    @GetMapping(value = "/seller/{id}")
     ResponseEntity<SimpleResponse> getById(@PathVariable("id") String id) {
         return ResponseEntity.ok(new SimpleResponse(userService.findSellerById(id)));
     }
