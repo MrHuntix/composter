@@ -14,13 +14,15 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "items")
-@SqlResultSetMapping(name="updateResult", columns = { @ColumnResult(name = "count")})
+@SqlResultSetMapping(name="updateResult", classes = { @ConstructorResult(targetClass = Integer.class, columns = {
+        @ColumnResult(name = "value", type = Integer.class)
+})})
 
 @SqlResultSetMapping(name = "Items.getItemsForSellerMapper", classes = @ConstructorResult(targetClass = AllItemsResponse.class, columns = {
-        @ColumnResult(name = "itemId", type = Long.class), @ColumnResult(name = "sname", type = String.class),
+        @ColumnResult(name = "iid", type = Long.class), @ColumnResult(name = "sname", type = String.class),
         @ColumnResult(name = "scontact", type = String.class), @ColumnResult(name = "iname", type = Long.class),
-        @ColumnResult(name = "icost", type = String.class), @ColumnResult(name = "dp", type = Date.class),
-        @ColumnResult(name = "iweight", type = String.class), @ColumnResult(name = "iimg", type = Byte[].class),
+        @ColumnResult(name = "icost", type = String.class), @ColumnResult(name = "idp", type = String.class),
+        @ColumnResult(name = "iweight", type = String.class), @ColumnResult(name = "iimg", type = String.class),
 }))
 
 @NamedNativeQueries({

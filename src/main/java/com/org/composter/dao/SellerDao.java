@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface SellerDao extends JpaRepository<Seller, Long> {
     Optional<Seller> findByContact(String userContact);
+    Optional<Seller> getByUserId(String id);
+
 }

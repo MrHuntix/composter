@@ -5,6 +5,7 @@ import com.org.composter.dao.LogsDao;
 import com.org.composter.dao.SellerDao;
 import com.org.composter.model.Items;
 import com.org.composter.model.Logs;
+import com.org.composter.model.Seller;
 import com.org.composter.request.NewItemRequest;
 import com.org.composter.response.AllItemsResponse;
 import com.org.composter.response.ItemResponse;
@@ -36,15 +37,18 @@ public class ItemService {
     @Autowired
     private ItemsDao itemsDao;
 
+    @Autowired
+    private MapperUtil mapperUtil;
+
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public boolean add(NewItemRequest item) {
         LOG.info("adding new item {} to market", item.getItemname());
-        Logs logs = MapperUtil.getLogs(item);
+        Logs logs = mapperUtil.getLogs(item);
         logs = logsDao.saveAndFlush(logs);
         LOG.info("persisted logs record {}. Start of saving item", logs.getId());
         long sellerId = sellerDao.findByContact(item.getUserid()).get().getSellerId();
         LOG.info("found seller id {} for seller {}. Building item", sellerId, item.getUserid());
-        Items items = MapperUtil.getItem(item, sellerId);
+        Items items = mapperUtil.getItem(item, sellerId);
         LOG.info("persisting item to db");
         items = itemsDao.saveAndFlush(items);
         LOG.info("persisted item {}", items.getItemId());
@@ -53,7 +57,8 @@ public class ItemService {
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public String deleteItem(String id) {
-        itemsDao.deleteById(Long.getLong(id));
+        LOG.info("deleting {}", Long.parseLong(id));
+        itemsDao.deleteById(Long.parseLong(id));
         return "deleteditem";
     }
 
@@ -89,7 +94,7 @@ public class ItemService {
             return new ArrayList<>();
         }
         LOG.info("found {} items", items.size());
-        List<ItemResponse> response = MapperUtil.getMappedItemSet(items);
+        List<ItemResponse> response = mapperUtil.getMappedItemSet(items);
         LOG.info("mapped {} items", response.size());
         return response;
     }
@@ -101,18 +106,19 @@ public class ItemService {
     }
 
     public List<Map<String, String>> dispItems() {
-        List<AllItemsResponse> items = itemsDao.getItemsForSeller();
+        List<Items> items = itemsDao.findAll();
         LOG.info("found {}", items.size());
         List<Map<String, String>> mappedItems = items.stream().map(item -> {
+            Seller seller = sellerDao.findById(item.getSellerId()).get();
             Map<String, String> i = new HashMap<>();
             i.put("ItemId", String.valueOf(item.getItemId()));
-            i.put("Name", item.getSname());
-            i.put("Contact", item.getScontact());
-            i.put("ItemName", item.getIname());
-            i.put("Cost", item.getIcost());
-            i.put("DayPosted", item.getDp().toString());
-            i.put("ItemWeight", item.getIweight());
-            i.put("Image", item.getIimg().toString());
+            i.put("Name", seller.getName());
+            i.put("Contact", seller.getContact());
+            i.put("ItemName", item.getItemName());
+            i.put("Cost", String.valueOf(item.getCost()));
+            i.put("DayPosted", item.getDayPosted().toString());
+            i.put("ItemWeight", item.getItemWeight());
+            i.put("Image", item.getImage().toString());
             return i;
         }).collect(Collectors.toList());
         return mappedItems;

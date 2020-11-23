@@ -15,7 +15,7 @@ public class AllItemsResponse {
     private String scontact;
     private String iname;
     private String icost;
-    private Date dp;
+    private String idp;
     private String iweight;
-    private byte[] iimg;
+    private String iimg;
 }

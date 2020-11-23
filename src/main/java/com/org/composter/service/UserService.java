@@ -27,6 +27,9 @@ public class UserService {
     @Autowired
     private SellerDao sellerDao;
 
+    @Autowired
+    private MapperUtil mapperUtil;
+
     /**
      * Validates data from @{@link LoginRequest} to the data in db
      * @param request login information of user.
@@ -79,7 +82,7 @@ public class UserService {
             return false;
         }
         LOG.info("no buyer exists, creating new user {}", registerRequest.getContact());
-        Buyer buyer = MapperUtil.getBuyer(registerRequest);
+        Buyer buyer = mapperUtil.getBuyer(registerRequest);
         buyerDao.saveAndFlush(buyer);
         return true;
     }
@@ -97,7 +100,7 @@ public class UserService {
             return false;
         }
         LOG.info("no seller exists, creating new user {}", registerRequest.getContact());
-        Seller seller = MapperUtil.getSeller(registerRequest);
+        Seller seller = mapperUtil.getSeller(registerRequest);
         sellerDao.saveAndFlush(seller);
         return true;
     }

@@ -34,6 +34,9 @@ public class OfferService {
     @Autowired
     private BuyerDao buyerDao;
 
+    @Autowired
+    private MapperUtil mapperUtil;
+
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<HashMap<String, String>> getOffersForSeller(String seller) {
         LOG.info("getting offers for seller {}", seller);
@@ -66,7 +69,7 @@ public class OfferService {
         Buyer buyer = buyerDao.findByContact(offerRequest.getSellerContact()).get();
         LOG.info("got buyer {} for {}", buyer.getId(), buyer.getContact());
         LOG.info("building offer");
-        Offers offer = MapperUtil.getOffer(offerRequest, buyer.getId(), seller.getSellerId());
+        Offers offer = mapperUtil.getOffer(offerRequest, buyer.getId(), seller.getSellerId());
         try {
             offer = offersDao.saveAndFlush(offer);
             LOG.info("placed offer {}", offer.getOfferId());

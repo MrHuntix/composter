@@ -12,10 +12,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "seller")
 @NamedNativeQueries({
-        @NamedNativeQuery(name = "Seller.findByContact", query = Seller.findByContact, resultClass = Seller.class)
+        @NamedNativeQuery(name = "Seller.findByContact", query = Seller.findByContact, resultClass = Seller.class),
+        @NamedNativeQuery(name = "Seller.getByUserId", query = Seller.getByUserId, resultClass = Seller.class),
 })
 public class Seller {
     public static final String findByContact = "SELECT * FROM seller WHERE Contact=:userContact";
+    public static final String getByUserId = "SELECT * FROM seller WHERE SellerId=:id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
