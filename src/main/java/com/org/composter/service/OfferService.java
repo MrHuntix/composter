@@ -19,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +53,7 @@ public class OfferService {
             items.put("BuyerName", offer.getBuyerName());
             items.put("BuyerContact", offer.getBuyerContact());
             items.put("weight", offer.getWeight());
-            items.put("cost", offer.getOfferCost());
+            items.put("cost", offer.getOfferCost().toString());
             return items;
         }).collect(Collectors.toList());
         LOG.info("found and mapped {} offers for {}", mappedOffers.size(), seller);
@@ -66,17 +67,23 @@ public class OfferService {
         Seller seller = sellerDao.findByContact(offerRequest.getSellerContact()).get();
         LOG.info("got seller {} for {}", seller.getSellerId(), seller.getContact());
         LOG.info("getting buyer {}", offerRequest.getSellerContact());
-        Buyer buyer = buyerDao.findByContact(offerRequest.getSellerContact()).get();
+        Buyer buyer = buyerDao.findByContact(offerRequest.getBuyerContact()).get();
         LOG.info("got buyer {} for {}", buyer.getId(), buyer.getContact());
         LOG.info("building offer");
-        Offers offer = mapperUtil.getOffer(offerRequest, buyer.getId(), seller.getSellerId());
-        try {
-            offer = offersDao.saveAndFlush(offer);
-            LOG.info("placed offer {}", offer.getOfferId());
-            return true;
-        } catch (Exception e) {
-            LOG.info("exception while placing offer");
-            e.printStackTrace();
+        Optional<Offers> existing = offersDao.getOfferByItemAndBuyerAndSeller(offerRequest.getItemId(), seller.getSellerId(), buyer.getId());
+        if (!existing.isPresent()) {
+            Offers offer = mapperUtil.getOffer(offerRequest, buyer.getId(), seller.getSellerId());
+            try {
+                offer = offersDao.saveAndFlush(offer);
+                LOG.info("placed offer {}", offer.getOfferId());
+                return true;
+            } catch (Exception e) {
+                LOG.info("exception while placing offer");
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            LOG.info("offer already exists {}", existing.get().getOfferId());
             return false;
         }
     }

@@ -14,24 +14,26 @@ import javax.persistence.*;
 @Entity
 @Table(name = "offers")
 @SqlResultSetMapping(name = "Offers.getOffersForSellerMapping", classes = @ConstructorResult(targetClass = ViewOffersResponse.class, columns = {
-        @ColumnResult(name = "oid", type = Long.class), @ColumnResult(name = "iname", type = String.class),
-        @ColumnResult(name = "iweight", type = String.class), @ColumnResult(name = "icost", type = Long.class),
-        @ColumnResult(name = "bname", type = String.class), @ColumnResult(name = "bcontact", type = String.class),
-        @ColumnResult(name = "oweight", type = String.class), @ColumnResult(name = "ocost", type = String.class),
+        @ColumnResult(name = "offerId", type = Long.class), @ColumnResult(name = "itemName", type = String.class),
+        @ColumnResult(name = "itemWeight", type = String.class), @ColumnResult(name = "itemCost", type = Long.class),
+        @ColumnResult(name = "buyerName", type = String.class), @ColumnResult(name = "buyerContact", type = String.class),
+        @ColumnResult(name = "weight", type = String.class), @ColumnResult(name = "offerCost", type = String.class),
 }))
 
 @SqlResultSetMapping(name = "Offers.getCartMapping", classes = @ConstructorResult(targetClass = CartReponse.class, columns = {
-        @ColumnResult(name = "iname", type = String.class), @ColumnResult(name = "oweight", type = String.class),
-        @ColumnResult(name = "ocost", type = String.class)
+        @ColumnResult(name = "itemName", type = String.class), @ColumnResult(name = "weight", type = String.class),
+        @ColumnResult(name = "cost", type = String.class)
 }))
 
 @NamedNativeQueries({
         @NamedNativeQuery(name = "Offers.getOffersForSeller", query = Offers.getOffersForSeller, resultSetMapping = "Offers.getOffersForSellerMapping"),
-        @NamedNativeQuery(name = "Offers.getCart", query = Offers.getCart, resultSetMapping = "Offers.getCartMapping")
+        @NamedNativeQuery(name = "Offers.getCart", query = Offers.getCart, resultSetMapping = "Offers.getCartMapping"),
+        @NamedNativeQuery(name = "Offers.getOfferByItemAndBuyerAndSeller", query = Offers.getOfferByItemAndBuyerAndSeller, resultClass = Offers.class)
         })
 public class Offers {
-    public static final String getOffersForSeller = "SELECT offers.OfferId oid,items.ItemName iname,items.ItemWeight iweight,items.Cost icost,buyer.Name bname,buyer.Contact bcontact,offers.weight oweight,offers.cost ocost FROM offers JOIN items JOIN buyer WHERE offers.ItemId=items.ItemId AND offers.SellerId=:seller AND offers.BuyerId=buyer.id";
-    public static final String getCart = "SELECT items.ItemName iname,offers.weight oweight,offers.cost ocost FROM items JOIN offers where offers.ItemId=items.ItemId AND offers.BuyerId=:id";
+    public static final String getOffersForSeller = "SELECT offers.OfferId offerId,items.ItemName itemName,items.ItemWeight itemWeight,items.Cost itemCost,buyer.Name buyerName,buyer.Contact buyerContact,offers.weight weight,offers.cost offerCost FROM offers JOIN items JOIN buyer WHERE offers.ItemId=items.ItemId AND offers.SellerId=:seller AND offers.BuyerId=buyer.id";
+    public static final String getCart = "SELECT items.ItemName itemName,offers.weight weight,offers.cost cost FROM items JOIN offers where offers.ItemId=items.ItemId AND offers.BuyerId=:id";
+    public static final String getOfferByItemAndBuyerAndSeller = "SELECT * from offers where ItemId=:itemId AND SellerId=:sellerId AND BuyerId=:buyerId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

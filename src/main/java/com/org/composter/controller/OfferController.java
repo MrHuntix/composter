@@ -33,7 +33,7 @@ public class OfferController {
     public ResponseEntity<SimpleResponse> placeOffer(@RequestBody OfferRequest offerRequest) {
         LOG.info("start of create offer request");
         boolean resposne = offerService.placeOffer(offerRequest);
-        return resposne?ResponseEntity.ok(new SimpleResponse("exists")):ResponseEntity.ok(new SimpleResponse("offered"));
+        return resposne?ResponseEntity.ok(new SimpleResponse("offered")):ResponseEntity.ok(new SimpleResponse("exists"));
     }
 
     @GetMapping(value = "/cart/{id}", produces = "application/json")
