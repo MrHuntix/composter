@@ -2,7 +2,6 @@ package com.org.composter.util;
 
 import com.org.composter.dao.SellerDao;
 import com.org.composter.model.*;
-import com.org.composter.request.LoginRequest;
 import com.org.composter.request.NewItemRequest;
 import com.org.composter.request.OfferRequest;
 import com.org.composter.request.RegisterRequest;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +50,7 @@ public class MapperUtil {
         item.setItemWeight(itemRequest.getItemweight());
         item.setImage(itemRequest.getImage().getBytes());
         item.setCost(itemRequest.getItemcost());
-        item.setDayPosted(itemRequest.getDate());
+        item.setDayPosted(new Date(itemRequest.getDate()));
         return item;
     }
 

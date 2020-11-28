@@ -7,9 +7,7 @@ import com.org.composter.model.Items;
 import com.org.composter.model.Logs;
 import com.org.composter.model.Seller;
 import com.org.composter.request.NewItemRequest;
-import com.org.composter.response.AllItemsResponse;
 import com.org.composter.response.ItemResponse;
-import com.org.composter.response.ViewOffersResponse;
 import com.org.composter.util.MapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +38,8 @@ public class ItemService {
 
     @Autowired
     private MapperUtil mapperUtil;
+
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public boolean add(NewItemRequest item) {
@@ -116,7 +117,7 @@ public class ItemService {
             i.put("Contact", seller.getContact());
             i.put("ItemName", item.getItemName());
             i.put("Cost", String.valueOf(item.getCost()));
-            i.put("DayPosted", item.getDayPosted().toString());
+            i.put("DayPosted", formatter.format(item.getDayPosted()));
             i.put("ItemWeight", item.getItemWeight());
             i.put("Image", item.getImage().toString());
             return i;

@@ -16,8 +16,8 @@ public class NewItemRequest {
     private long itemcost;
     private String image;
     private String itemweight;
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
-    private Date date;
+    //@JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    private long date;
     private String lat;
     private String lng;
 }

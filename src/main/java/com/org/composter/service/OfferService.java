@@ -53,7 +53,7 @@ public class OfferService {
             items.put("BuyerName", offer.getBuyerName());
             items.put("BuyerContact", offer.getBuyerContact());
             items.put("weight", offer.getWeight());
-            items.put("cost", offer.getOfferCost().toString());
+            items.put("cost", offer.getOfferCost());
             return items;
         }).collect(Collectors.toList());
         LOG.info("found and mapped {} offers for {}", mappedOffers.size(), seller);
