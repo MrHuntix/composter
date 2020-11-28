@@ -1,6 +1,5 @@
 package com.org.composter.controller;
 
-import com.org.composter.model.Items;
 import com.org.composter.request.NewItemRequest;
 import com.org.composter.response.ItemResponse;
 import com.org.composter.response.SimpleResponse;

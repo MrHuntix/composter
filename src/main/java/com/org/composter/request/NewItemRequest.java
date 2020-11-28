@@ -14,7 +14,7 @@ public class NewItemRequest {
     private String userid;
     private String itemname;
     private long itemcost;
-    private String image;
+    private byte[] image;
     private String itemweight;
     //@JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private long date;

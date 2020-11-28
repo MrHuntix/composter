@@ -48,7 +48,7 @@ public class MapperUtil {
         item.setSellerId(sellerId);
         item.setItemName(itemRequest.getItemname());
         item.setItemWeight(itemRequest.getItemweight());
-        item.setImage(itemRequest.getImage().getBytes());
+        item.setImage(itemRequest.getImage());
         item.setCost(itemRequest.getItemcost());
         item.setDayPosted(new Date(itemRequest.getDate()));
         return item;
