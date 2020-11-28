@@ -17,10 +17,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -119,7 +116,7 @@ public class ItemService {
             i.put("Cost", String.valueOf(item.getCost()));
             i.put("DayPosted", formatter.format(item.getDayPosted()));
             i.put("ItemWeight", item.getItemWeight());
-            i.put("Image", item.getImage().toString());
+            i.put("Image", Base64.getEncoder().encodeToString(item.getImage()));
             return i;
         }).collect(Collectors.toList());
         return mappedItems;
